@@ -1,10 +1,12 @@
 #coding:utf-8
 
 from crawlerTaobaoItem import CrawlerTaobaoItem
+import crawlerTaobaoComment
 import filePreRegular
+import time
 
 if __name__ == '__main__':
-    input_ = eval(input("1：获取商品信息；2：数据处理保存商品信息到excel；请录入数字："))
+    input_ = eval(input("1：获取商品信息；2：数据处理保存商品信息到excel；3:爬取商品评论；请录入数字："))
     if input_ == 1:
         crawlerTaobaoItem = CrawlerTaobaoItem()
         pages = 18
@@ -20,3 +22,12 @@ if __name__ == '__main__':
         for item in items:
             ls_item.append(item)
         filePreRegular.jsonToExcel(ls_item)
+    elif input_ == 3:
+        items_id = filePreRegular.read_items()
+        # print(items_id)
+        currentPage = 3
+        for item_id in items_id[0:2]:
+            for page in range(1, currentPage):
+                print(type(item_id), item_id, type(page), page)
+                crawlerTaobaoComment.get_one_page(item_id=item_id, currentPage=page)
+                time.sleep(30)
