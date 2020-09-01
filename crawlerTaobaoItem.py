@@ -28,7 +28,7 @@ class CrawlerTaobaoItem():
         except:
             print('爬取失败：{}'.format(url))
             self.fd = '爬取失败：{}'.format(url)
-            self.items_input(shop_id + 'log', self.fd)
+            self.items_input(shop_id + 'log.txt', self.fd)
 
 
     def items_input(self,fileName,fileData):

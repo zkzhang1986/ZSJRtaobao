@@ -149,7 +149,7 @@ def get_one_page(currentPage):
 
 
 if __name__ == '__main__':
-    currentPages = 3351
+    currentPages = 3
     input_= eval(input("1：爬取淘宝评论；2：数据清洗；请录入数字："))
     if input_ == 1:
         for i in range(1,currentPages):
