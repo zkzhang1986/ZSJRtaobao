@@ -7,14 +7,25 @@
 # @Description:
 # 测试
 
-import re
-import json
 
-with open('Input\\Comm539326206533.txt', 'r', encoding='utf-8') as f:
-    fd = f.read()
-    fd = re.findall('\\((.*)\\)',fd)
-    for i in fd:
-        i = json.loads(i)
-        page = i.get('rateDetail').get('paginator').get('lastPage')
-        print(page)
+# 测试引用以及路径
+from settings import Settings
+
+settings = Settings()
+shopItemsPath = settings.shopItemsPath + '115842711.txt'
+
+# print(shopItemsPath)
+with open(shopItemsPath,'r',encoding='utf-8') as f:
+    print(f.read())
+
+# import re
+# import json
+#
+# with open('Input\\Comm539326206533.txt', 'r', encoding='utf-8') as f:
+#     fd = f.read()
+#     fd = re.findall('\\((.*)\\)',fd)
+#     for i in fd:
+#         i = json.loads(i)
+#         page = i.get('rateDetail').get('paginator').get('lastPage')
+#         print(page)
     # print(type(fd),fd)
