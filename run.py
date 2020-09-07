@@ -1,4 +1,11 @@
-#coding:utf-8
+# _*_ coding:utf-8 _*_
+# @FileName : q.PY
+# @time     : 2020/9/7 11:14
+# @Author   : zk_zhang
+# @Mail     : 251492174@qq.com
+# @Version  : 2020090701
+# @Description:
+# 主函数
 
 from crawlerTaobaoItem import CrawlerTaobaoItem
 import crawlerTaobaoComment
@@ -25,6 +32,9 @@ if __name__ == '__main__':
     elif input_ == 3:
         items_id = filePreRegular.read_items()
         # print(items_id)
+        # 20200901
+        # currentPage = 100
+        # for item_id in items_id:        
         currentPage = 3
         for item_id in items_id[0:2]:
             for page in range(1, currentPage):

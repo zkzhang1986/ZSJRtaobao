@@ -1,4 +1,12 @@
+# _*_ coding:utf-8 _*_
+# @FileName : q.PY
+# @time     : 2020/9/7 11:14
+# @Author   : zk_zhang
+# @Mail     : 251492174@qq.com
+# @Version  : 2020090701
+# @Description:
 # 主要功能：爬取淘宝评论，下载原始数据
+
 import requests
 import time
 import json
@@ -6,7 +14,9 @@ import re
 import filePreRegular
 import os
 
+
 def get_comm_file_name():
+    # 获取文件名 # 20200907
     path = r'D:\project\ZSJRTaobao\Input'
     dirs = os.listdir(path)
     file_name_ls = []
@@ -16,6 +26,7 @@ def get_comm_file_name():
     return file_name_ls
 
 def get_file_name_ls():
+    # 文件名形成列表 # 20200907
     file_name_ls = get_comm_file_name()
     # print(file_name_ls)
     file_name_lss = []
@@ -25,7 +36,7 @@ def get_file_name_ls():
     return file_name_lss
 
 def get_item_page_ls():
-    # 根据文件名解析第一页评论
+    # 根据文件名解析第一页评论 # 20200907
     file_name_lss = get_file_name_ls()
     # 根据item解析文件第一页评论内容 得到item对于页数
     item_page_ls = []
@@ -121,7 +132,7 @@ def get_one_page(item_id, currentPage):
 
 def get_one_page_com(item_id, currentPage):
     """
-    获得单品评论
+    获得单品评论 # 20200907
     :param currentPage: 评论页数
     :return: 评论内容
     """
