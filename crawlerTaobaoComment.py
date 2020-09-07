@@ -1,5 +1,5 @@
 # _*_ coding:utf-8 _*_
-# @FileName : q.PY
+# @FileName : crawlerTaobaoComment.PY
 # @time     : 2020/9/7 11:14
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
@@ -16,8 +16,12 @@ import os
 
 
 def get_comm_file_name():
-    # 获取文件名 # 20200907
-    path = r'D:\project\ZSJRTaobao\Input'
+    """
+    根据文件路径再通过正则表达式提取文件中的数字，此数字就是商品列表id并且返回。
+    upDate:20200907
+    :return:
+    """
+    path = r'D:\Project0611\project2020\20200820\ZSJRTaobao\Input'
     dirs = os.listdir(path)
     file_name_ls = []
     for file in dirs:
@@ -26,17 +30,25 @@ def get_comm_file_name():
     return file_name_ls
 
 def get_file_name_ls():
-    # 文件名形成列表 # 20200907
+    """
+    清洗商品列表id，文件名形成列表，返回int类型
+    upDate:20200907
+    :return:
+    """
     file_name_ls = get_comm_file_name()
     # print(file_name_ls)
     file_name_lss = []
     for i in file_name_ls:
         if i != []:
-            file_name_lss.append(i[0])
+            file_name_lss.append(int(i[0]))
     return file_name_lss
 
 def get_item_page_ls():
-    # 根据文件名解析第一页评论 # 20200907
+    """
+    根据清洗后的商品id构文件路径，读取文件，再解析得到商品id对应的最大评论页数。
+    upDate:20200907
+    :return:
+    """
     file_name_lss = get_file_name_ls()
     # 根据item解析文件第一页评论内容 得到item对于页数
     item_page_ls = []
@@ -53,6 +65,33 @@ def get_item_page_ls():
                 # print(item_page_dict)
                 item_page_ls.append(item_page_dict)
     return item_page_ls
+
+def item_page_Input(fd):
+    """
+    将清洗后的商品_评论页写成json文档
+    :return:
+    """
+    with open(r'D:\Project0611\project2020\20200820\ZSJRTaobao\Output\test.json', 'w', encoding='utf-8') as f:
+        f.write(json.dumps(fd))
+
+def item_page_Input_read():
+    """
+
+    :return:
+    """
+    item_page_ok_ls = []
+    with open(r'D:\Project0611\project2020\20200820\ZSJRTaobao\Output\test.json', 'r', encoding='utf-8') as f:
+        fd_r = json.loads(f.read())
+        for i in fd_r:
+            i_items = i.items()
+            item_page_dict = {}
+            for key,values in i_items:
+                # 评论页为0的过滤掉。
+                if values != 0:
+                    # print(key,values)
+                    item_page_dict[key]=values
+                    item_page_ok_ls.append(item_page_dict)
+    return item_page_ok_ls
 
 def fileInput(file,name):
     """
@@ -190,7 +229,37 @@ if __name__ == '__main__':
     # 商品列表
     items_id = filePreRegular.read_items()
     # print(items_id)
-    print(get_item_page_ls())
+    # print(len(get_file_name_ls()))
+    # fd = get_item_page_ls()
+    # item_page_Input(fd)
+
+    item_pages= item_page_Input_read()
+    # print(item_pages)
+    # 根据商品id以及总页面数获取评论
+    for item_page in item_pages:
+        items = item_page.items()
+        for key, value in items:
+            for i in range(1, value + 1):
+                print('items_id:{},page:{}'.format(key, i))
+                get_one_page_com(item_id=key, currentPage=i)
+                time.sleep(30)
+
+    # print(fd)
+
+    # with open(r'D:\Project0611\project2020\20200820\ZSJRTaobao\Output\test.json', 'w', encoding='utf-8') as f:
+    #     f.write(json.dumps(fd))
+
+    # with open(r'D:\Project0611\project2020\20200820\ZSJRTaobao\Output\test.json', 'r', encoding='utf-8') as f:
+    #     fd_r = json.loads(f.read())
+    #     for i in fd_r:
+    #         i_items = i.items()
+    #         for key,values in i_items:
+    #             if values != 0:
+    #                 print(key,values)
+
+
+
+
 
 
     # print(get_file_name_ls())

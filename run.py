@@ -4,13 +4,13 @@
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
 # @Version  : 2020090701
-# @Description:
-# 主函数
+# @Description: 运行主函数
 
 from crawlerTaobaoItem import CrawlerTaobaoItem
 import crawlerTaobaoComment
 import filePreRegular
 import time
+
 
 if __name__ == '__main__':
     input_ = eval(input("1：获取商品信息；2：数据处理保存商品信息到excel；3:爬取商品评论；请录入数字："))
