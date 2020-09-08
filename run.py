@@ -1,34 +1,60 @@
 # _*_ coding:utf-8 _*_
-# @FileName : q.PY
+# @FileName : run.PY
 # @time     : 2020/9/7 11:14
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
-# @Version  : 2020090701
+# @Version  : 2020090801
+# @UpDate   : 20200908
 # @Description: 运行主函数
 
 from crawlerTaobaoItem import CrawlerTaobaoItem
+from dataProcess import DataProcess
+from settings import Settings
+
+
 import crawlerTaobaoComment
 import filePreRegular
 import time
 
+def crawlerTaobaoItem(pages):
+    # 通过手机端获取商品信息并下载保存原始数据
+    crawlerTaobaoItem = CrawlerTaobaoItem()
+    for page in range(1,pages):
+        print('第{}页'.format(page))
+        crawlerTaobaoItem.get_mShop_items(page)
+        print('休息一下...(约25秒)')
+        time.sleep(25)
+
+def pMItemsInfoToExcel(inputFilePath,fileName,outputFilePath):
+    '''
+    将dataProcess.get_mShop_items()与 dataProcess.toExcel串起来。
+    主要功能：将get_mShop_items()处理后的Mitems商品信息保存在excel文件
+    :param inputFilePath: 用于get_mShop_items()中数据来源
+    :param fileName: 文件名
+    :param outputFilePath: 保存excel路径
+    :return:
+    '''
+    dataProcess = DataProcess()
+    pMItemsInfo = []
+    for pMItemInfo in dataProcess.get_mShop_items(inputFilePath, fileName):
+        pMItemsInfo.append(pMItemInfo)
+    dataProcess.toExcel(pMItemsInfo, outputFilePath, fileName)
 
 if __name__ == '__main__':
-    input_ = eval(input("1：获取商品信息；2：数据处理保存商品信息到excel；3:爬取商品评论；请录入数字："))
+    settings = Settings()
+    inputFilePath = settings.shopItemsPath
+    fileName = settings.mShopId
+    outputFilePath = settings.output
+
+    input_ = eval(input("1：获取手机端商品信息；2：手机端商品信息保存到excel；3:爬取商品一页的评论；请录入数字："))
     if input_ == 1:
-        crawlerTaobaoItem = CrawlerTaobaoItem()
+        # peges 是根据ajax 数据得到。
         pages = 18
-        shop_id = '115842711'
-        for page in range(1,pages):
-            print('第{}页'.format(page))
-            fd = crawlerTaobaoItem.get_items(page, shop_id)
+        # 通过手机端获取商品信息并下载保存原始数据
+        crawlerTaobaoItem(pages)
     elif input_ == 2:
-        filename = 115842711
-        fd = filePreRegular.get_fd(filename)
-        items = filePreRegular.get_item(fd)
-        ls_item = []
-        for item in items:
-            ls_item.append(item)
-        filePreRegular.jsonToExcel(ls_item)
+        # 将get_mShop_items()处理后的Mitems商品信息保存在excel文件
+        pMItemsInfoToExcel(inputFilePath, fileName, outputFilePath)
     elif input_ == 3:
         items_id = filePreRegular.read_items()
         # print(items_id)

@@ -10,13 +10,47 @@
 
 # 测试引用以及路径
 from settings import Settings
+from dataProcess import DataProcess
 
 settings = Settings()
-shopItemsPath = settings.shopItemsPath + '115842711.txt'
+dataProcess = DataProcess()
 
-# print(shopItemsPath)
-with open(shopItemsPath,'r',encoding='utf-8') as f:
-    print(f.read())
+class A:
+
+    def __init__(self,cookie,page):
+
+        self.cookie = cookie
+        self.page = page
+
+    def cookies(self):
+        cookie = self.cookie
+        # print(cookie)
+        # for i in range(1,4):
+        #     dataProcess.file_input(settings.shopItemsPath,'test',str(i))
+        fd = dataProcess.file_read(settings.shopItemsPath,'test')
+        print(fd)
+
+    # def page(self):
+    #     page = self.page
+    #     print(page)
+
+
+
+
+
+if __name__ == '__main__':
+    cookie = settings.mCookie
+    pages = '2'
+    a = A(cookie,pages)
+    a.cookies()
+    # a.page()
+
+
+# shopItemsPath = settings.shopItemsPath + '115842711.txt'
+#
+# # print(shopItemsPath)
+# with open(shopItemsPath,'r',encoding='utf-8') as f:
+#     print(f.read())
 
 # import re
 # import json
