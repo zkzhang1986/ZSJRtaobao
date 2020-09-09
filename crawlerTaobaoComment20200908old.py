@@ -3,8 +3,8 @@
 # @time     : 2020/9/7 11:14
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
-# @Version  : 2020090901
-# @UpDate   : 20200909
+# @Version  : 2020090701
+# @UpDate   : 20200908
 # @Description:
 # 主要功能：爬取淘宝评论，下载原始数据
 
@@ -19,14 +19,14 @@ import filePreRegular
 import os
 
 settings = Settings()
-dataProcess = DataProcess()
+dataProcrss = DataProcess()
 
 class CrawlerTaobaoComment:
 
-    # def __init__(self):
-    #     self.filePath = settings.shopItemsOnePageCommPath
+    def __init__(self):
+        self.filePath = settings.shopItemsOnePageCommPath
 
-    def get_items_comm(self,inputFilePath, items_id, currentpage,isOnepage):
+    def get_one_page_comm(self,items_id, currentpage):
         """
         获得每个单品首页评论
         :param items_id: mItemsID
@@ -64,25 +64,78 @@ class CrawlerTaobaoComment:
         }
 
         try:
-            res = requests.get(url, params=params, headers=headers, timeout=30)
-            print("开始爬取网页：{}".format(res.url))
+            res = requests.get(url, params=params, headers=headers, timeout=(30))
+            print("准备爬取：{}".format(res.url))
             print("状态码：{}".format(res.status_code))
             res.raise_for_status()
             res.encoding = res.apparent_encoding
-            print("爬取内容:{}".format(res.text))
-            if isOnepage == 'Y':
-                dataProcess.file_input(inputFilePath, 'Comm'+str(items_id), res.text)
-            else:
-                dataProcess.file_input(inputFilePath, items_id, res.text)
+            print(res.text)
+            dataProcrss.file_input(self.filePath, items_id, res.text)
         except:
             print("爬取商品失败!失败ItemID：{}".format(items_id))
             fd = '爬取商品失败!失败ItemID：{}'.format(items_id)
-            if isOnepage == 'Y':
-                dataProcess.file_input(inputFilePath, 'crawlFailedOnePageCommItems',fd)
-            else:
-                dataProcess.file_input(inputFilePath, 'crawlFailedAllPageCommItems', fd)
+            dataProcrss.file_input(self.filePath, 'unget_one_page_comm',fd)
+            # # com_input('items' + 'log.txt', fd)
+            #
+            # print('爬取异常')
+            # fd = '失败：{}'.format(url)
+            # print(fd)
+            # dataProcess.file_input(settings.shopItemsOnePageCommPath, 'test_uns_r_log', fd)
+            # pass
 
-    def get_comm_file_name(self):
+
+        # try:
+        #     # 构建时间戳 以及 callback
+        #     t_param = time.time()
+        #     t_list = str(t_param).split('.')
+        #     _ksTS = t_list[0] + '_' + t_list[1][:3]
+        #     callback = str(int(t_list[1][:3]) + 1)
+
+            # ajax url
+            # oldUrl = 'https://rate.tmall.com/list_detail_rate.htm?itemId=576746298719&sellerId=2328901391'
+            # url = 'https://rate.tmall.com/list_detail_rate.htm?'
+            #
+            # headers = {
+            #     # cookie 值
+            #     'cookie': 'lid=gd_zzk888; enc=i5KLOflYb%2FS8Tqze1AKMG3vTxCttYOjRJ4cV30fE0QhO659eblJhak7eN0xyKv%2BAoURQfAA3qixzu2TpOs2apA%3D%3D; cna=WDK6F65Sl0wCAXeORULl6bLH; hng=CN%7Czh-CN%7CCNY%7C156; t=a05ba69ee87b559716af551ede32de86; tracknick=gd_zzk888; _tb_token_=f7e14e98ba780; cookie2=2459d29a14481a080b11c1638d4e2678; dnk=gd_zzk888; lgc=gd_zzk888; xlly_s=1; _m_h5_tk=2ab54805d1dcc8f05afbc25df956cb8b_1597987114097; _m_h5_tk_enc=acc2c9809ad34c0fa805d271fb011520; _l_g_=Ug%3D%3D; unb=397232047; cookie1=BxAdLiKCnaKhZWVTyqjLKL05zRnNeUlNFGBAqQrihds%3D; login=true; cookie17=UNkwchw0GUym; _nk_=gd_zzk888; sg=879; uc1=cookie15=U%2BGCWk%2F75gdr5Q%3D%3D&cookie14=UoTV6yD45OwnDA%3D%3D&cookie21=WqG3DMC9EdFmJgkfrG6mWw%3D%3D&pas=0&existShop=true&cookie16=U%2BGCWk%2F74Mx5tgzv3dWpnhjPaQ%3D%3D; uc3=id2=UNkwchw0GUym&nk2=BJJmy%2BsSQO%2F%2F&lg2=UtASsssmOIJ0bQ%3D%3D&vt3=F8dCufTDAbAg5L21pmI%3D; uc4=nk4=0%40Bpa5i7mKAW0tp0o5QZWDnr4BMn8%3D&id4=0%40Ug46vTm8Zo825HIKTeQ7mIOcjwc%3D; sgcookie=EVzVWY1PxbVyzwUHVxLcW; csg=d9bffd05; x5sec=7b22726174656d616e616765723b32223a223930346332626664653766376236343233343231643864623233623238643538434a754d2f666b46454d696873377252724f664d53526f4c4d7a6b334d6a4d794d4451334f7a453d227d; tfstk=cticBQbNoqzjOcUoRnZjduMa6F0GZ5BzMflj404L2orS0qmPip7P87jWr7cmXN1..; l=eBMrhFbuOOwEchFhBOfwourza77OSIRAguPzaNbMiOCPOJfk56yRWZu35B8DC3GVh6SpR3WlE43gBeYBqIq0x6aNa6Fy_Ckmn; isg=BKSkGV7_pyh8EtNeBgiDzWBgdaKWPcinYGF_877FMG8zaUQz5k2YN9rPKcHxsQD_',
+            #     # 返回
+            #     # "referer":"https://detail.tmall.com/item.htm?id=576746298719&rn=e82112c285c196431b1c91c448ccc1c8&abbucket=11&on_comment=1",
+            #     "referer": 'https://detail.tmall.com/item.htm?id={}&on_comment=1'.format(item_id),
+            #     # 模拟浏览器
+            #     'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+            #     'accept': '*/*',
+            #     'accept-encoding': 'gzip, deflate, br',
+            #     'accept-language': 'zh-CN,zh;q=0.9',
+            # }
+
+            # 请求参数
+            # params = {
+            #     # 商品ID
+            #     "itemId": item_id,
+            #     # 卖家ID
+            #     "sellerId": 2328901391,
+            #     # 评论页
+            #     "currentPage": currentPage,
+            #     # 时间戳
+            #     "_ksTS": _ksTS,
+            #     # json 回调
+            #     "callback": callback,
+            # }
+        # try:
+        #     res = requests.get(url, params=params, headers=headers)
+        #     print("准备爬取：{}".format(res.url))
+        #     print("状态码：{}".format(res.status_code))
+        #     print(res.text)
+        #     com_input(item_id, res.text)
+        #     # com_input(fileName='itemsComm', fileData=str(item_id) + ':' + res.text)
+        #     # return (res.text)
+        # except:
+        #     print("爬取{}页面失败".format(res.url))
+        #     fd = '爬取失败：{}'.format(url)
+        #     com_input('items' + 'log.txt', fd)
+
+
+    def get_comm_file_name():
         """
         根据文件路径再通过正则表达式提取文件中的数字，此数字就是商品列表id并且返回。
         upDate:20200907
@@ -96,13 +149,13 @@ class CrawlerTaobaoComment:
             file_name_ls.append(file_items)
         return file_name_ls
 
-    def get_file_name_ls(self):
+    def get_file_name_ls():
         """
         清洗商品列表id，文件名形成列表，返回int类型
         upDate:20200907
         :return:
         """
-        file_name_ls = self.get_comm_file_name(self)
+        file_name_ls = get_comm_file_name()
         # print(file_name_ls)
         file_name_lss = []
         for i in file_name_ls:
@@ -110,13 +163,13 @@ class CrawlerTaobaoComment:
                 file_name_lss.append(int(i[0]))
         return file_name_lss
 
-    def get_item_page_ls(self):
+    def get_item_page_ls():
         """
         根据清洗后的商品id构文件路径，读取文件，再解析得到商品id对应的最大评论页数。
         upDate:20200907
         :return:
         """
-        file_name_lss = self.get_file_name_ls(self)
+        file_name_lss = get_file_name_ls()
         # 根据item解析文件第一页评论内容 得到item对于页数
         item_page_ls = []
         for file_name_ls in file_name_lss:
@@ -141,7 +194,7 @@ class CrawlerTaobaoComment:
         with open(r'D:\Project0611\project2020\20200820\ZSJRTaobao\Output\test.json', 'w', encoding='utf-8') as f:
             f.write(json.dumps(fd))
 
-    def item_page_Input_read(self):
+    def item_page_Input_read():
         """
 
         :return:
@@ -228,47 +281,88 @@ class CrawlerTaobaoComment:
             print("准备爬取：{}".format(res.url))
             print("状态码：{}".format(res.status_code))
             print(res.text)
-            # com_input(item_id,res.text)
+            com_input(item_id,res.text)
             # com_input(fileName='itemsComm', fileData=str(item_id) + ':' + res.text)
             # return (res.text)
         except:
             print("爬取{}页面失败".format(res.url))
             fd = '爬取失败：{}'.format(url)
-            # com_input('items' + 'log.txt', fd)
+            com_input('items' + 'log.txt', fd)
 
-# 测本类
-# if __name__ == '__main__':
-    # 测试 get_items_comm()
-    # inputFilePath = settings.output
-    # getOnepageCommFilePath = settings.shopItemsOnePageCommPath
-    # fileName = settings.mShopId
-    # isOneage = 'Y'
-    #
-    # crawlerTaobaoComment = CrawlerTaobaoComment()
-    #
-    # pMItems_id = dataProcess.get_pMItemsInfo_MitemsId(inputFilePath,fileName)
-    # # print(items_id)
-    # for pMitem_id in pMItems_id:
-    #     crawlerTaobaoComment.get_items_comm(getOnepageCommFilePath,pMitem_id,1,isOneage)
-    #     time.sleep(25)
+    def get_one_page_com(item_id, currentPage):
+        """
+        获得单品评论 # 20200907
+        :param currentPage: 评论页数
+        :return: 评论内容
+        """
+        try:
+            # 构建时间戳 以及 callback
+            t_param = time.time()
+            t_list = str(t_param).split('.')
+            _ksTS = t_list[0]+'_'+t_list[1][:3]
+            callback = str(int(t_list[1][:3])+ 1)
 
+            # ajax url
+            # url = 'https://rate.tmall.com/list_detail_rate.htm?itemId=576746298719&sellerId=2328901391'
+            url = 'https://rate.tmall.com/list_detail_rate.htm?'
+
+            headers = {
+                # cookie 值
+                'cookie': 'lid=gd_zzk888; enc=i5KLOflYb%2FS8Tqze1AKMG3vTxCttYOjRJ4cV30fE0QhO659eblJhak7eN0xyKv%2BAoURQfAA3qixzu2TpOs2apA%3D%3D; cna=WDK6F65Sl0wCAXeORULl6bLH; hng=CN%7Czh-CN%7CCNY%7C156; t=a05ba69ee87b559716af551ede32de86; tracknick=gd_zzk888; _tb_token_=f7e14e98ba780; cookie2=2459d29a14481a080b11c1638d4e2678; dnk=gd_zzk888; lgc=gd_zzk888; xlly_s=1; _m_h5_tk=2ab54805d1dcc8f05afbc25df956cb8b_1597987114097; _m_h5_tk_enc=acc2c9809ad34c0fa805d271fb011520; _l_g_=Ug%3D%3D; unb=397232047; cookie1=BxAdLiKCnaKhZWVTyqjLKL05zRnNeUlNFGBAqQrihds%3D; login=true; cookie17=UNkwchw0GUym; _nk_=gd_zzk888; sg=879; uc1=cookie15=U%2BGCWk%2F75gdr5Q%3D%3D&cookie14=UoTV6yD45OwnDA%3D%3D&cookie21=WqG3DMC9EdFmJgkfrG6mWw%3D%3D&pas=0&existShop=true&cookie16=U%2BGCWk%2F74Mx5tgzv3dWpnhjPaQ%3D%3D; uc3=id2=UNkwchw0GUym&nk2=BJJmy%2BsSQO%2F%2F&lg2=UtASsssmOIJ0bQ%3D%3D&vt3=F8dCufTDAbAg5L21pmI%3D; uc4=nk4=0%40Bpa5i7mKAW0tp0o5QZWDnr4BMn8%3D&id4=0%40Ug46vTm8Zo825HIKTeQ7mIOcjwc%3D; sgcookie=EVzVWY1PxbVyzwUHVxLcW; csg=d9bffd05; x5sec=7b22726174656d616e616765723b32223a223930346332626664653766376236343233343231643864623233623238643538434a754d2f666b46454d696873377252724f664d53526f4c4d7a6b334d6a4d794d4451334f7a453d227d; tfstk=cticBQbNoqzjOcUoRnZjduMa6F0GZ5BzMflj404L2orS0qmPip7P87jWr7cmXN1..; l=eBMrhFbuOOwEchFhBOfwourza77OSIRAguPzaNbMiOCPOJfk56yRWZu35B8DC3GVh6SpR3WlE43gBeYBqIq0x6aNa6Fy_Ckmn; isg=BKSkGV7_pyh8EtNeBgiDzWBgdaKWPcinYGF_877FMG8zaUQz5k2YN9rPKcHxsQD_',
+                # 返回
+                # "referer":"https://detail.tmall.com/item.htm?id=576746298719&rn=e82112c285c196431b1c91c448ccc1c8&abbucket=11&on_comment=1",
+                "referer": 'https://detail.tmall.com/item.htm?id={}&on_comment=1'.format(item_id),
+                # 模拟浏览器
+                'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+                'accept': '*/*',
+                'accept-encoding': 'gzip, deflate, br',
+                'accept-language': 'zh-CN,zh;q=0.9',
+            }
+
+            # 请求参数
+            params = {
+                # 商品ID
+                "itemId": item_id,
+                # 卖家ID
+                "sellerId": 2328901391,
+                # 评论页
+                "currentPage":currentPage,
+                # 时间戳
+                "_ksTS":_ksTS,
+                # json 回调
+                "callback":callback,
+            }
+
+            res = requests.get(url,params=params,headers=headers)
+            print("准备爬取：{}".format(res.url))
+            print("状态码：{}".format(res.status_code))
+            print(res.text)
+            # com_input(item_id,str(item_id)+':'+res.text)
+            com_input(fileName='Comm'+str(item_id), fileData=res.text)
+            # return (res.text)
+        except:
+            print("爬取{}页面失败".format(res.url))
+            fd = '爬取失败：{}'.format(url)
+            com_input('items' + 'log.txt', fd)
+
+if __name__ == '__main__':
     # 商品列表
-    # items_id = filePreRegular.read_items()
+    items_id = filePreRegular.read_items()
     # print(items_id)
     # print(len(get_file_name_ls()))
     # fd = get_item_page_ls()
     # item_page_Input(fd)
 
-    # item_pages= item_page_Input_read()
+    item_pages= item_page_Input_read()
     # print(item_pages)
     # 根据商品id以及总页面数获取评论
-    # for item_page in item_pages:
-    #     items = item_page.items()
-    #     for key, value in items:
-    #         for i in range(1, value + 1):
-    #             print('items_id:{},page:{}'.format(key, i))
-    #             get_one_page_com(item_id=key, currentPage=i)
-    #             time.sleep(30)
+    for item_page in item_pages:
+        items = item_page.items()
+        for key, value in items:
+            for i in range(1, value + 1):
+                print('items_id:{},page:{}'.format(key, i))
+                get_one_page_com(item_id=key, currentPage=i)
+                time.sleep(30)
 
     # print(fd)
 

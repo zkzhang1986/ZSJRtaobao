@@ -4,7 +4,7 @@
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
 # @Version  : 2020090801
-# @UpDate   : 20200908
+# @UpDate   : 20200909
 # @Description: 文件读写处理
 
 import re
@@ -108,7 +108,7 @@ class DataProcess:
         从excel表同获取mItemsId
         :param inputFilePath: 文件路径output目录下的excel文件
         :param fileName: 文件名
-        :return: mItmesId
+        :return: 集合类型的 mItmesId
         '''
         fileDate = pd.read_excel(inputFilePath + str(fileName) + '.xls', encoding='utf-8')
         items = fileDate['item_id'].values.tolist()
