@@ -3,8 +3,8 @@
 # @time     : 2020/9/8 10:19
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
-# @Version  : 2020090801
-# @UpDate   : 20200909
+# @Version  : 20200901001
+# @UpDate   : 202009010
 # @Description: 文件读写处理
 
 import re
@@ -12,6 +12,7 @@ import json
 import xlwt
 import xlrd
 import pandas as pd
+import os
 
 from settings import Settings
 
@@ -117,19 +118,79 @@ class DataProcess:
             mItemsId.add(item)
         return mItemsId
 
+    def get_comm_file_name(self, inputFilePath):
+        """
+        1.根据文件路径再通过正则表达式提取文件中的数字，此数字就是商品列表id并且返回。
+        2.清洗商品列表id，形成列表，返回int类型
+        3.根据item解析文件第一页评论内容 得到item对于页数 类型为字典类型
+        upDate:20200910
+        :return:
+        """
+        # 根据文件路径再通过正则表达式提取文件中的数字，此数字就是商品列表id并且返回。
+        dirs = os.listdir(inputFilePath)
+        file_name_ls = []
+        for file in dirs:
+            file_items = re.findall('^Comm(.*?).txt',file)
+            file_name_ls.append(file_items)
+
+        # 清洗商品列表id，形成列表，返回int类型
+        new_file_name_ls = []
+        for i in file_name_ls:
+            if i != []:
+                new_file_name_ls.append(int(i[0]))
+        # return new_file_name_ls
+
+        # 根据item解析文件第一页评论内容 得到item对于页数
+        item_page_ls = []
+        for file_name_ls in new_file_name_ls:
+            with open( inputFilePath + '\\Comm' + str(file_name_ls) + '.txt', 'r', encoding='utf-8') as f:
+                fd = f.read()
+                fd = re.findall('\\((.*)\\)', fd)
+                for i in fd:
+                    item_page_dict = {}
+                    i = json.loads(i)
+                    page = i.get('rateDetail').get('paginator').get('lastPage')
+                    # print(page)
+                    item_page_dict[file_name_ls] = page
+                    # print(item_page_dict)
+                    item_page_ls.append(item_page_dict)
+        return item_page_ls
+
+    def process_item_page(self, item_page_ls):
+        """
+        用于过滤评论页数为0的商品。（选择用）
+        :param item_page_ls: 参数是get_comm_file_name()函数值。
+        :return: 过滤就的item_page数据
+        """
+        item_page_ok_ls = []
+        for i in item_page_ls:
+            i_items = i.items()
+            item_page_dict = {}
+            for key, values in i_items:
+                # 评论页为0的过滤掉。
+                if values != 0:
+                    # print(key,values)
+                    item_page_dict[key] = values
+                    item_page_ok_ls.append(item_page_dict)
+        # print(item_page_ok_ls)
+        return item_page_ok_ls
+
+
 
 # 测试本类
-if __name__ == '__main__':
-    settings = Settings()
-    dataProcess = DataProcess()
-    inputFilePath = settings.shopItemsPath
-    fileName = settings.mShopId
-    outputFilePath = settings.output
-    # dataProcess.pMItemsInfoToExcel(inputFilePath, fileName , outputFilePath)
-    # 测试获取 itemsId
-    itemsId = dataProcess.read_pMItemsInfo(outputFilePath,fileName)
-    print(len(itemsId))
-    for i in itemsId:
-        print(i)
+# if __name__ == '__main__':
+#     settings = Settings()
+#     dataProcess = DataProcess()
+#     fname=dataProcess.get_comm_file_name(settings.shopItemsOnePageCommPath)
+#     print(fname)
+#     inputFilePath = settings.shopItemsPath
+#     fileName = settings.mShopId
+#     outputFilePath = settings.output
+#     # dataProcess.pMItemsInfoToExcel(inputFilePath, fileName , outputFilePath)
+#     # 测试获取 itemsId
+#     itemsId = dataProcess.read_pMItemsInfo(outputFilePath,fileName)
+#     print(len(itemsId))
+#     for i in itemsId:
+#         print(i)
 
 

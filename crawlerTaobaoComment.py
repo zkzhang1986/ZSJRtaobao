@@ -4,7 +4,7 @@
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
 # @Version  : 2020090901
-# @UpDate   : 20200909
+# @UpDate   : 202009010
 # @Description:
 # 主要功能：爬取淘宝评论，下载原始数据
 
@@ -29,6 +29,7 @@ class CrawlerTaobaoComment:
     def get_items_comm(self,inputFilePath, items_id, currentpage,isOnepage):
         """
         获得每个单品首页评论
+        inputFilePath ：保存文件路径
         :param items_id: mItemsID
         :param currentpage: 页数
         :return:

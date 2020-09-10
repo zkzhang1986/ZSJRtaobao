@@ -4,7 +4,7 @@
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
 # @Version  : 2020090801
-# @UpDate   : 20200908
+# @UpDate   : 20200910
 # @Description:
 # 通过手机端获取商品信息并下载保存原始数据
 

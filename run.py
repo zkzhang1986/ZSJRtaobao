@@ -4,7 +4,7 @@
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
 # @Version  : 2020090801
-# @UpDate   : 20200909
+# @UpDate   : 202009010
 # @Description: 运行主函数
 
 from crawlerTaobaoItem import CrawlerTaobaoItem
@@ -12,7 +12,7 @@ from dataProcess import DataProcess
 from settings import Settings
 from crawlerTaobaoComment import CrawlerTaobaoComment
 
-import crawlerTaobaoComment
+# import crawlerTaobaoComment
 import filePreRegular
 import time
 
@@ -81,9 +81,33 @@ def crawlerTaobaoItemOnepageComm():
         print('休息一下...(约25秒)')
         time.sleep(25)
 
+def crawlerTaobaoItemAllpageComm():
+    """
+    根据itemid爬取淘宝所有评论
+    :return:
+    """
+    item_page_ls = dataProcess.get_comm_file_name(settings.shopItemsOnePageCommPath)
+    getAllpageCommFilePath = settings.shopItemsAllPageCommPath
+    isOneage = 'N'
+    for i in item_page_ls :
+        i_item = i.items()
+        for key,values in i_item:
+            print("商品item:{},总页数:{}".format(key,values))
+            for values_i in range(1, int(values)+1):
+                print("商品item_id:{},第{}页".format(key,values_i))
+                crawlerTaobaoComment.get_items_comm(getAllpageCommFilePath, key, values_i, isOneage)
+                # continue
+                print('休息一下...(约25秒)')
+                time.sleep(25)
+
+
 if __name__ == '__main__':
 
-    input_ = eval(input("1：获取手机端商品信息；2：手机端商品信息保存到excel；3:爬取商品一页的评论；请录入数字："))
+    input_ = eval(input("1.获取手机端商品信息；"
+                        "2.手机端商品信息保存到excel；"
+                        "3.爬取商品一页的评论；"
+                        "4.获取商品所有评论；"
+                        "请录入数字："))
     if input_ == 1:
         # peges 是根据ajax 数据得到。
         pages = 18
@@ -95,6 +119,11 @@ if __name__ == '__main__':
     elif input_ == 3:
         # 获取商品的第一页评论
         crawlerTaobaoItemOnepageComm()
+    elif input_ == 4:
+        # 获取商品所有评论
+        crawlerTaobaoItemAllpageComm()
+
+
 
         #
         # items_id = filePreRegular.read_items()

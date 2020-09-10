@@ -4,7 +4,7 @@
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
 # @Version  : 2020090701
-# @update   : 20200909
+# @update   : 20200910
 # @Description:
 # 测试
 
@@ -57,16 +57,82 @@ class A:
 
 
 if __name__ == '__main__':
-    cookie = settings.mCookie
-    pages = '2'
-    a = A(cookie,pages)
-    dataProcess = DataProcess()
-    # a.cookies()
-    # a.page()
+    # cookie = settings.mCookie
+    # pages = '2'
+    # a = A(cookie,pages)
+    # dataProcess = DataProcess()
+    # # a.cookies()
+    # # a.page()
+    #
+    # url_ls = ['http://www.baidu.com', 'http://ww.baidu1.com', 'https://www.163.com', 'https://www.abc.com']
+    # for url in url_ls:
+    #     a.get_HtmlText(url)
 
-    url_ls = ['http://www.baidu.com', 'http://ww.baidu1.com', 'https://www.163.com', 'https://www.abc.com']
-    for url in url_ls:
-        a.get_HtmlText(url)
+    # 测试推导式
+    # ls = [[],['123'],['456'],[],['789']]
+    # new_ls =[]
+    # a = [int(i[0]) for i in ls if i !=[]]
+    # for i in a:
+    #    new_ls.append(i)
+    # print(new_ls)
+
+    # 测试列表过滤
+    ls   = [{"44386180857": 30}, {"522028844207": 11},{"626124632828": 1}, {"626398167836": 0}, {"626428105862": 0}, {"626429973881": 0}]
+    fd_r = [{44386180857: 30}, {522028844207: 11}, {626124632828: 1}, {626398167836: 0}, {626428105862: 0},{626429973881: 0}]
+    # 评论为0 过滤
+    # item_page_ok_ls = []
+    # for i in fd_r:
+    #     i_items = i.items()
+    #     item_page_dict = {}
+    #     for key, values in i_items:
+    #         # 评论页为0的过滤掉。
+    #         if values != 0:
+    #             # print(key,values)
+    #             item_page_dict[key] = values
+    #             item_page_ok_ls.append(item_page_dict)
+    # print(item_page_ok_ls)
+
+    # 测试2
+    for i in fd_r :
+        i_item = i.items()
+        for key,values in i_item:
+            print("商品item:{},总页数:{}".format(key,values))
+            for values_i in range(1, int(values)+1):
+                print("item_id:{},page:{}".format(key,values_i))
+
+
+    # 测试1
+    # for i in ls :
+    #     # print(type(i),i)
+    #     iitems = i.items()
+    #     for key,values in iitems:
+    #         print(type(key),key)
+    #         for i in key:
+    #             print(i)
+    #
+    #         for key_i in list(key):
+    #             print(key_i)
+    #             for values_i in range(1,int(values)):
+    #                 print("item_id:{},page:{}".format(str(key_i),values_i))
+
+
+        # items_page = []
+        # key= [key for key,values in iitems ]
+
+
+        # print(list(i.keys()), list(i.values()))
+
+
+        # items_page.append([[key,values] for key,values in iitems if values !=0 ])
+        # print(items_page)
+        # print(key,values)
+        # for key,values in iitems:
+        #     print(key,values)
+        #     key = lambda key :  values != 0
+        #     # print(key)
+        #     for i in key:
+        #         print(i)
+
 
     # 测试 continue
     # ls = ['abc','def',123,'ghi',456,'jkl']
