@@ -1,14 +1,21 @@
 # _*_ coding:utf-8 _*_
-# @FileName : q.PY
+# @FileName : tetst01.PY
 # @time     : 2020/9/7 11:14
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
 # @Version  : 2020090701
 # @Description:
-# 测试
+# 测试 解析
 
 import re
 import json
+
+from settings import Settings
+
+settings = Settings()
+
+
+
 
 count = 0
 count_line = 0
@@ -22,7 +29,6 @@ for i in range(1,100):
     ss = re.findall('\\((.*)\\)',fd)
     # print(s)
     for s in ss:
-
         # print(type(i))
         item = json.loads(s)
         # print(item)

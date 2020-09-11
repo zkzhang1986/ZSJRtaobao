@@ -4,7 +4,7 @@
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
 # @Version  : 2020090801
-# @UpDate   : 202009010
+# @UpDate   : 202009011
 # @Description: 运行主函数
 
 from crawlerTaobaoItem import CrawlerTaobaoItem
@@ -100,6 +100,26 @@ def crawlerTaobaoItemAllpageComm():
                 print('休息一下...(约25秒)')
                 time.sleep(25)
 
+def itemComToexcel():
+    """
+    把解析出来的评论内容，存储在excel文件中
+    updata:20200911
+    :return:
+    """
+    # 需要解析原始数据的路径
+    inputFilePath = settings.shopItemsAllPageCommPath
+    # excel文件名
+    fileName = '中顺洁柔天猫旗舰店评论'
+    # 保存到excel的文件路径
+    outputFilePath = settings.output
+
+    itemsCom = []
+    for itemCom in dataProcess.parse_item_comm(inputFilePath):
+        itemsCom.append(itemCom)
+    # print(itemsCom)
+    # 保存到excel中
+    dataProcess.toExcel(itemsCom, outputFilePath, fileName)
+
 
 if __name__ == '__main__':
 
@@ -107,6 +127,7 @@ if __name__ == '__main__':
                         "2.手机端商品信息保存到excel；"
                         "3.爬取商品一页的评论；"
                         "4.获取商品所有评论；"
+                        "5.保存商品评论到excel文件；"
                         "请录入数字："))
     if input_ == 1:
         # peges 是根据ajax 数据得到。
@@ -122,18 +143,5 @@ if __name__ == '__main__':
     elif input_ == 4:
         # 获取商品所有评论
         crawlerTaobaoItemAllpageComm()
-
-
-
-        #
-        # items_id = filePreRegular.read_items()
-        # # print(items_id)
-        # # 20200901
-        # # currentPage = 100
-        # # for item_id in items_id:
-        # currentPage = 3
-        # for item_id in items_id[0:2]:
-        #     for page in range(1, currentPage):
-        #         print(type(item_id), item_id, type(page), page)
-        #         crawlerTaobaoComment.get_one_page(item_id=item_id, currentPage=page)
-        #         time.sleep(30)
+    elif input_ == 5:
+        itemComToexcel()

@@ -12,6 +12,7 @@
 # 测试引用以及路径
 from settings import Settings
 from dataProcess import DataProcess
+from crawlerTaobaoComment import CrawlerTaobaoComment
 import requests
 
 settings = Settings()
@@ -57,7 +58,27 @@ class A:
 
 
 if __name__ == '__main__':
-    # cookie = settings.mCookie
+    crawlerTaobaoComment = CrawlerTaobaoComment()
+    getAllpageCommFilePath = settings.shopItemsAllPageCommPath
+    crawlerTaobaoComment.get_items_comm(getAllpageCommFilePath, '623711370260', 1, 'N')
+    # item_page_ls = dataProcess.get_comm_file_name(settings.shopItemsOnePageCommPath)
+    # item_page_ls = [{'623866667511': 1}]
+    # getAllpageCommFilePath = settings.shopItemsAllPageCommPath
+    # isOneage = 'N'
+    # for i in item_page_ls:
+    #     i_item = i.items()
+    #     for key, values in i_item:
+    #         print("商品item:{},总页数:{}".format(key, values))
+    #         for values_i in range(1, int(values) + 1):
+    #             print("商品item_id:{},第{}页".format(key, values_i))
+    #             crawlerTaobaoComment.get_items_comm(getAllpageCommFilePath, key+"aaa", values_i, isOneage)
+    #             # continue
+    #             print('休息一下...(约25秒)')
+                # time.sleep(25)
+
+
+
+
     # pages = '2'
     # a = A(cookie,pages)
     # dataProcess = DataProcess()
@@ -77,8 +98,8 @@ if __name__ == '__main__':
     # print(new_ls)
 
     # 测试列表过滤
-    ls   = [{"44386180857": 30}, {"522028844207": 11},{"626124632828": 1}, {"626398167836": 0}, {"626428105862": 0}, {"626429973881": 0}]
-    fd_r = [{44386180857: 30}, {522028844207: 11}, {626124632828: 1}, {626398167836: 0}, {626428105862: 0},{626429973881: 0}]
+    # ls   = [{"44386180857": 30}, {"522028844207": 11},{"626124632828": 1}, {"626398167836": 0}, {"626428105862": 0}, {"626429973881": 0}]
+    # fd_r = [{44386180857: 30}, {522028844207: 11}, {626124632828: 1}, {626398167836: 0}, {626428105862: 0},{626429973881: 0}]
     # 评论为0 过滤
     # item_page_ok_ls = []
     # for i in fd_r:
@@ -93,12 +114,12 @@ if __name__ == '__main__':
     # print(item_page_ok_ls)
 
     # 测试2
-    for i in fd_r :
-        i_item = i.items()
-        for key,values in i_item:
-            print("商品item:{},总页数:{}".format(key,values))
-            for values_i in range(1, int(values)+1):
-                print("item_id:{},page:{}".format(key,values_i))
+    # for i in fd_r :
+    #     i_item = i.items()
+    #     for key,values in i_item:
+    #         print("商品item:{},总页数:{}".format(key,values))
+    #         for values_i in range(1, int(values)+1):
+    #             print("item_id:{},page:{}".format(key,values_i))
 
 
     # 测试1

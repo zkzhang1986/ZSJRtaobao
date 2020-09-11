@@ -4,7 +4,7 @@
 # @Author   : zk_zhang
 # @Mail     : 251492174@qq.com
 # @Version  : 20200901001
-# @UpDate   : 202009010
+# @UpDate   : 202009011
 # @Description: 文件读写处理
 
 import re
@@ -175,12 +175,53 @@ class DataProcess:
         # print(item_page_ok_ls)
         return item_page_ok_ls
 
+    def parse_item_comm(self,inputFilePath):
+        """
+        解析商品评论
+        updata:20200911
+        :param inputFilePath:
+        :return:
+        """
+        # 获取文件名
+        dirs = os.listdir(inputFilePath)
+        file_name_ls = []
+        # 正则表达式获取评论json
+        for file in dirs:
+            file_items = re.findall('^(.*?).txt', file)
+            file_name_ls.append(file_items)
+        # counts = 0
+        for itemid in file_name_ls:
+            # print(itemid)
+            fd = self.file_read(inputFilePath,itemid[0])
+            for i in fd:
+                ss = re.findall('\\((.*)\\)', i)
+                for s in ss:
+                    # 解析评论
+                    item = json.loads(s)
+                    item_rateLists = item.get('rateDetail').get('rateList')
+                    pages = item.get('rateDetail').get('paginator').get('lastPage')
+                    for item_rateList in item_rateLists:
+                        item_data = {}
+                        item_data['itemID'] = itemid
+                        item_data['pages'] = pages
+                        item_data['id'] = item_rateList.get('id')
+                        item_data['displayUserNick'] = item_rateList.get('displayUserNick')
+                        item_data['rateContent'] = item_rateList.get('rateContent')
+                        item_data['rateDate'] = item_rateList.get('rateDate')
+                        # counts += 1
+                        # print(item_data)
+                        yield item_data
+        # print('总条数：{}'.format(counts))
+
 
 
 # 测试本类
 # if __name__ == '__main__':
 #     settings = Settings()
 #     dataProcess = DataProcess()
+#     dataProcess.parse_item_comm(settings.shopItemsAllPageCommPath)
+
+
 #     fname=dataProcess.get_comm_file_name(settings.shopItemsOnePageCommPath)
 #     print(fname)
 #     inputFilePath = settings.shopItemsPath
